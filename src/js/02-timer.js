@@ -13,6 +13,7 @@ btnStart.setAttribute("disabled", "true");
 class Timer {
   constructor({ onTime }) {
     this.intervalId = null;
+    this.isActive = null;
     this.dateFuture = null;
     this.onTime = onTime;
   }
@@ -22,6 +23,11 @@ class Timer {
   }
 
   start() {
+    if (this.isActive) {
+      return;
+    }
+
+    this.isActive = true;
     const dateFuture = new Date(this.dateFuture);
 
     this.intervalId = setInterval(() => {

@@ -7,29 +7,39 @@ form.addEventListener("submit", onFormSubmit);
 function onFormSubmit(evt) {
   evt.preventDefault();
 
-  const { amount, delay, step } = evt.currentTarget.elements;
-
-  const fieldsVal = {
-    delayVal: Number(delay.value),
-    stepVal: Number(step.value),
-    amountVal: Number(amount.value),
+  const { amount, step, delay } = evt.currentTarget.elements;
+   
+  if (delay.value < 0 || step.value < 0) {
+    return Notiflix.Notify.failure("Insert a positive value");
   }
-  updateValues(fieldsVal);
 
-  evt.currentTarget.reset();
-};
-
-function updateValues({ delayVal, stepVal, amountVal }) {
-  for (let i = 1; i <= amountVal; i += 1) {
-    let newDelay = delayVal + stepVal * (i - 1);
-    createPromise(i, newDelay)
-      .then(({ position, delay }) => {
-        Notiflix.Notify.success(`Fulfilled promise ${position} in ${delay}ms`);
-      })
-      .catch(({ position, delay }) => {
-        Notiflix.Notify.failure(`Rejected promise ${position} in ${delay}ms`);
-      })
+  if (amount.value <= 0) {
+    return Notiflix.Notify.failure("Insert an amount greater than 0!");
   }
+
+  const [...arr] = evt.currentTarget.elements;
+
+  const fieldsVal = {}; 
+  arr.filter((q) => q.tagName == "INPUT").forEach((q) => { 
+     fieldsVal[q.name] = Number(q.value); 
+  }); 
+
+  updateValues(fieldsVal); 
+ 
+  evt.currentTarget.reset(); 
+}; 
+ 
+function updateValues({ amount, delay, step }) { 
+  for (let i = 1; i <= amount; i += 1) { 
+    let newDelay = delay + step * (i - 1); 
+    createPromise(i, newDelay) 
+      .then(({ position, delay }) => { 
+        Notiflix.Notify.success(`Fulfilled promise ${position} in ${delay}ms`); 
+      }) 
+      .catch(({ position, delay }) => { 
+        Notiflix.Notify.failure(`Rejected promise ${position} in ${delay}ms`); 
+      }) 
+  } 
 };
 
 function createPromise(position, delay) {
