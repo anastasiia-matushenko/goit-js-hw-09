@@ -1,39 +1,34 @@
 import Notiflix from 'notiflix';
 
 const form = document.querySelector(".form");
-const submitBtn = document.querySelector("button[type=submit]");
 
 form.addEventListener("submit", onFormSubmit);
 
 function onFormSubmit(evt) {
   evt.preventDefault();
-  submitBtn.disabled = true;
 
-  console.log(evt.currentTarget.elements);
   const { amount, delay, step } = evt.currentTarget.elements;
 
-  const fieldVal = {
-    delayVal: +delay.value,
-    stepVal: +step.value,
-    amountVal: +amount.value,
+  const fieldsVal = {
+    delayVal: Number(delay.value),
+    stepVal: Number(step.value),
+    amountVal: Number(amount.value),
   }
-  updateValues(fieldVal);
+  updateValues(fieldsVal);
 
   evt.currentTarget.reset();
 };
 
 function updateValues({ delayVal, stepVal, amountVal }) {
-  // let newDelay;
-  for (let position = 1; position <= amountVal; position += 1) {
-    let newDelay = delayVal + stepVal * position;
-
-    createPromise(position, newDelay)
+  for (let i = 1; i <= amountVal; i += 1) {
+    let newDelay = delayVal + stepVal * (i - 1);
+    createPromise(i, newDelay)
       .then(({ position, delay }) => {
         Notiflix.Notify.success(`Fulfilled promise ${position} in ${delay}ms`);
       })
       .catch(({ position, delay }) => {
         Notiflix.Notify.failure(`Rejected promise ${position} in ${delay}ms`);
-      });
+      })
   }
 };
 
@@ -42,8 +37,6 @@ function createPromise(position, delay) {
 
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      submitBtn.disabled = false;
-
     if (shouldResolve) {
       resolve({ position, delay });
     } else {
