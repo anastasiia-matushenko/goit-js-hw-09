@@ -19,12 +19,12 @@ function onFormSubmit(evt) {
 
   const [...arr] = evt.currentTarget.elements;
 
-  const fieldsVal = {}; 
-  arr.filter((q) => q.tagName == "INPUT").forEach((q) => { 
-     fieldsVal[q.name] = Number(q.value); 
+  const values = {}; 
+  arr.filter((elem) => elem.tagName == "INPUT").forEach((item) => { 
+     values[item.name] = Number(item.value); 
   }); 
 
-  updateValues(fieldsVal); 
+  updateValues(values); 
  
   evt.currentTarget.reset(); 
 }; 

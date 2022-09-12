@@ -3,10 +3,8 @@ import "flatpickr/dist/flatpickr.min.css";
 import Notiflix from 'notiflix';
 
 const btnStart = document.querySelector("button[data-start]");
-const daysValue = document.querySelector(".value[data-days]");
-const hoursValue = document.querySelector(".value[data-hours]");
-const minutesValue = document.querySelector(".value[data-minutes]");
-const secondsValue = document.querySelector(".value[data-seconds]");
+
+const dataTimes = ["data-days", "data-hours", "data-minutes", "data-seconds"];
 
 btnStart.setAttribute("disabled", "true");
 
@@ -40,7 +38,8 @@ class Timer {
       }
 
       const time = this.convertMs(deltaTime);
-      this.onTime(time);
+
+      this.onTime(Object.values(time));
     }, 1000);
   }
 
@@ -90,11 +89,11 @@ const options = {
 
 flatpickr("#datetime-picker", options);
 
-function updateClickFace({ days, hours, minutes, seconds }) {
-  daysValue.textContent = days;
-  hoursValue.textContent = hours;
-  minutesValue.textContent = minutes;
-  secondsValue.textContent = seconds;
+function updateClickFace(arr) {
+  for (let i = 0; i < dataTimes.length; i += 1) {
+    const elements = document.querySelector(`.value[${dataTimes[i]}]`)
+    elements.textContent = arr[i];
+  }
 };
 
 btnStart.addEventListener("click", () => {
